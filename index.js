@@ -240,7 +240,6 @@ setInterval(() => {
             saveSection(section)
 
             let icons = calculateIcon(section)
-            console.log(icons)
             sections[section].icons = icons
 
             sections[section].updated = false
