@@ -5,7 +5,7 @@ const fs = require("fs")
 const https = require("https")
 
 const dotenv = require('dotenv')
-dotenv.config()
+dotenv.config({path:__dirname+"/.env"})
 
 const PORT = 8080
 
