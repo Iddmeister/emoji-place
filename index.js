@@ -1,6 +1,11 @@
 const express = require("express")
 const path = require("path")
 const ws = require("ws")
+const fs = require("fs")
+const https = require("https")
+
+const dotenv = require('dotenv')
+dotenv.config()
 
 const PORT = 8080
 
@@ -157,18 +162,29 @@ function calculateIcon(section) {
 
 }
 
+
+
+var privateKey = fs.readFileSync(process.env.PRIVATE_KEY)
+var certificate = fs.readFileSync(process.env.CERTIFICATE)
+
+var options = {
+    key:privateKey,
+    cert:certificate,
+}
+
 var app = express()
+
+var httpsServer = https.createServer(options, app).listen(PORT, () => {
+    console.log(`Server Listening On Port ${PORT}`)
+})
+
 app.use("/", express.static(path.join(__dirname, "public"), {extensions:["html"]}))
 
 app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "public/index.html"))
 })
 
-var httpServer = app.listen(PORT, () => {
-    console.log(`Server Listening On Port ${PORT}`)
-})
-
-var socketServer = new ws.Server({server:httpServer})
+var socketServer = new ws.Server({server:httpsServer})
 
 socketServer.broadcast = (data) => {
     socketServer.clients.forEach(client => client.send(JSON.stringify(data)))

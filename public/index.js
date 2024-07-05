@@ -1,4 +1,6 @@
-var socket = new WebSocket("ws://"+location.host)
+// var socket = new WebSocket("ws://"+location.host)
+var socket = new WebSocket("wss://"+"misc.gamesbutnogames.com:8080")
+
 
 socket.sendData = (data) => {
     socket.send(JSON.stringify(data))
